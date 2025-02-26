@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
 fun DiceWithButtonAndImage(modifier: Modifier = Modifier) {
     var stage by remember { mutableIntStateOf(1) }
     var numSqueezes by remember { mutableIntStateOf(1) }
-
+    var primed by remember { mutableIntStateOf(0) }
 
     val imageResource01 = when (stage) {
         1 -> R.drawable.lemon_tree
@@ -72,8 +72,14 @@ fun DiceWithButtonAndImage(modifier: Modifier = Modifier) {
         else -> stringResource(R.string.restart_text)
     }
 
-    Column(
-        modifier, horizontalAlignment = Alignment.CenterHorizontally
+    val textResource02 = when (primed) {
+        0 -> stringResource(R.string.continue_text)
+        1 -> stringResource(R.string.next_text)
+        else -> stringResource(R.string.oops_text)
+    }
+
+        Column(
+                modifier, horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
 
@@ -82,21 +88,22 @@ fun DiceWithButtonAndImage(modifier: Modifier = Modifier) {
         Button(onClick = {
 
             when (stage) {
-                1 -> {
-                    stage++
-                    numSqueezes = (1..3).random()
-                }
                 2 -> {
-                    if (numSqueezes == 0)
-                        stage++
+                    if (primed == 0)
+                        if (numSqueezes == 0)
+                            primed = 1
+                        else
+                            numSqueezes--
                     else
-                        numSqueezes--
-                }
-                3 -> {
-                    stage++
+                        primed = 2
                 }
                 else -> {
-                    stage = 1
+                    if (primed == 0) {
+                        primed = 1
+                    }
+                    else {
+                        primed = 2
+                    }
                 }
             }
         }) {
@@ -105,6 +112,45 @@ fun DiceWithButtonAndImage(modifier: Modifier = Modifier) {
                 contentDescription = stage.toString(),
                 modifier = Modifier.height(96.dp)
             )
+        }
+        Button(onClick = {
+
+            when (stage) {
+                1 -> {
+                    if (primed != 0)
+                    {
+                        stage++
+                        numSqueezes = (1..3).random()
+                        primed = 0
+                    }
+
+                }
+                2 -> {
+                    if (primed != 0)
+                    {
+                        stage++
+                        primed = 0
+                    }
+                }
+                3 -> {
+                    if (primed != 0)
+                    {
+                        stage++
+                        numSqueezes = (1..3).random()
+                        primed = 0
+                    }
+                }
+                else -> {
+                    if (primed != 0)
+                    {
+                        stage = 1
+                        numSqueezes = (1..3).random()
+                        primed = 0
+                    }
+                }
+            }
+        }) {
+            Text(textResource02)
         }
         Text(textResource01)
         Text("Test $numSqueezes")

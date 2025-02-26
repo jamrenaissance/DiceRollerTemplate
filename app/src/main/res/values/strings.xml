@@ -20,4 +20,7 @@
     <string name="squeeze_text">Keep tapping the lemon to squeeze it</string>
     <string name="tap_the_lemonade_to_drink_it">Tap the lemonade to drink it</string>
     <string name="restart_text">Tap the empty glass to start again</string>
+    <string name="next_text">Next</string>
+    <string name="continue_text">Continue Making Lemonade</string>
+    <string name="oops_text">Oops! Hit Next</string>
 </resources>
